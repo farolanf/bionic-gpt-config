@@ -1,0 +1,22 @@
+services:
+
+  llm-api:
+    image: ghcr.io/berriai/litellm:main-latest
+    command: ["/bin/sh", "-c", "pip install async_generator && litellm --model ollama/dolphin-phi --api_base http://ollama:11434 --host 0.0.0.0 --port 11434"]
+    entrypoint: []
+    platform: linux/amd64
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - /home/farolan/.ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
